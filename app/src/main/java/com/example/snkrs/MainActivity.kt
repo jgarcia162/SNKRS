@@ -7,19 +7,15 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snkrs.adapter.CarouselLayoutManager
 import com.example.snkrs.adapter.MovieAdapter
-import com.example.snkrs.network.ApiClient
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
-import com.example.snkrs.caching.CacheInterceptor
-import com.example.snkrs.caching.ForceCacheInterceptor
-import okhttp3.Cache
-import okhttp3.logging.HttpLoggingInterceptor
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-  private var cacheSize: Long =  (5 * 1024 * 1024).toLong()
-  private lateinit var repository: Repository
-  private lateinit var apiClient: ApiClient
+  @Inject lateinit var repository: Repository
   
   private lateinit var movieAdapter: MovieAdapter
   
@@ -31,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     topRatedRV = findViewById(R.id.top_rated_movies_rv)
   
     initRV()
-    initApiClient()
   }
   
   private fun initRV() {
@@ -43,22 +38,8 @@ class MainActivity : AppCompatActivity() {
     PagerSnapHelper().attachToRecyclerView(topRatedRV)
   }
   
-  private fun initApiClient() {
-    val loggingInterceptor = HttpLoggingInterceptor().apply {
-      level = HttpLoggingInterceptor.Level.BASIC
-    }
-    
-    apiClient = ApiClient(
-      loggingInterceptor,
-      CacheInterceptor(),
-      ForceCacheInterceptor(this),
-      Cache(cacheDir, cacheSize)
-    )
-  }
-  
   override fun onStart() {
     super.onStart()
-    repository = Repository(apiClient)
     repository
       .getTopRated()
       .subscribeOn(Schedulers.io())
