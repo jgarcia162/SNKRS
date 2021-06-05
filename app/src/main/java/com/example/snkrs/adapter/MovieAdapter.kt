@@ -7,7 +7,7 @@ import com.example.snkrs.R
 import com.example.snkrs.model.Movie
 
 class MovieAdapter(
-  private val data: List<Movie>,
+  private var data: List<Movie>,
   private val onClick: (Movie) -> Unit
 ) : RecyclerView.Adapter<MovieViewHolder>() {
   
@@ -23,5 +23,10 @@ class MovieAdapter(
   
   override fun getItemCount(): Int {
     return data.size
+  }
+  
+  fun setData(data: List<Movie>){
+    this.data = data;
+    notifyDataSetChanged()
   }
 }
