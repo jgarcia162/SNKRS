@@ -3,19 +3,20 @@ package com.example.snkrs
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snkrs.adapter.CarouselLayoutManager
 import com.example.snkrs.adapter.MovieAdapter
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.schedulers.Schedulers
+import com.example.snkrs.extensions.toast
+import com.example.snkrs.viewmodel.MoviesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
   @Inject lateinit var repository: Repository
+  private val moviesViewModel: MoviesViewModel by viewModels()
   
   private lateinit var movieAdapter: MovieAdapter
   
@@ -40,18 +41,18 @@ class MainActivity : AppCompatActivity() {
   
   override fun onStart() {
     super.onStart()
-    repository
-      .getTopRated()
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribeBy(
-        onSuccess = {
-          movieAdapter.setData(it.results)
-        },
-        onError = {
-          it.printStackTrace()
-        }
-      )
+    observeLiveData()
+    moviesViewModel.getTopRatedMovies({
+      toast("movies loaded")
+    }, {
+      toast("couldnt load movies")
+    })
+  }
+  
+  private fun observeLiveData(){
+    moviesViewModel.topRatedMoviesLiveData.observe(this, {movies ->
+      movieAdapter.setData(movies)
+    })
   }
 }
 
