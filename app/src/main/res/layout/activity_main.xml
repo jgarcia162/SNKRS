@@ -10,13 +10,28 @@
         android:id="@+id/top_rated_movies_rv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintVertical_bias=".5"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/layout_card_item"
-        tools:itemCount="30"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/upcoming_movies_rv"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="10"
+        tools:layout_editor_absoluteX="0dp"
+        tools:listitem="@layout/layout_card_item" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/upcoming_movies_rv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_rated_movies_rv"
+        tools:itemCount="10"
+        tools:layout_editor_absoluteX="0dp"
+        tools:listitem="@layout/layout_card_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
