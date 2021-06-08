@@ -15,12 +15,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-  @Inject lateinit var repository: Repository
   private val moviesViewModel: MoviesViewModel by viewModels()
-  
   private lateinit var movieAdapter: MovieAdapter
-  
   private lateinit var topRatedRV: RecyclerView
+  @Inject lateinit var repository: Repository
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,12 +45,21 @@ class MainActivity : AppCompatActivity() {
     }, {
       toast("couldnt load movies")
     })
+    
+//    moviesViewModel.getUpcomingMovies({
+//      toast("movies loaded")
+//    }, {
+//      toast("couldnt load movies")
+//    })
   }
   
   private fun observeLiveData(){
     moviesViewModel.topRatedMoviesLiveData.observe(this, {movies ->
       movieAdapter.setData(movies)
     })
+//    moviesViewModel.upcomingMoviesLiveData.observe(this, {movies ->
+//      movieAdapter.setData(movies)
+//    })
   }
 }
 

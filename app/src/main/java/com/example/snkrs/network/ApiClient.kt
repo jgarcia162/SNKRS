@@ -12,10 +12,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 /** This is a wrapper around the following APIs:
  *
- * [tmdbApi]
+ * [TMDBApi]
  *
  * Use ApiClient for easier abstraction and implementation should new APIs be introduced and for
- * easier integration with a Dependency Injection framework*/
+ * easier integration with a Dependency Injection framework
+ * */
 
 class ApiClient(
   private var loggingInterceptor: HttpLoggingInterceptor?,
@@ -23,7 +24,6 @@ class ApiClient(
   private var forceCacheInterceptor: ForceCacheInterceptor,
   private val cache: Cache
 ) {
-//  private val userAuthHeader: String get() = "Authentication ${BuildTmdbApiKey}"
   
   var tmdbBaseUrl: String = TMDB_BASE_URL
     set(value) {
@@ -70,10 +70,16 @@ class ApiClient(
   }
   
   /**
-   * Gets all [Person]s
+   * Gets Top Rated movies
    *
-   * See [tmdbApi.getPeople]
+   * See [TMDBApi.getTopRated]
    */
   fun getTopRated() = tmdbApi.getTopRated(BuildConfig.TmdbApiKey)
   
+  /**
+   * Gets Upcoming movies
+   *
+   * See [TMDBApi.getUpcoming]
+   */
+  fun getUpcoming() = tmdbApi.getUpcoming(BuildConfig.TmdbApiKey, "US")
 }

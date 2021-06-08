@@ -24,6 +24,9 @@ class MoviesViewModel @Inject constructor(
   private val topRatedMoviesList = MutableLiveData<List<Movie>>()
   val topRatedMoviesLiveData: LiveData<List<Movie>> = topRatedMoviesList
   
+  private val upcomingMoviesList = MutableLiveData<List<Movie>>()
+  val upcomingMoviesLiveData: LiveData<List<Movie>> = upcomingMoviesList
+  
   fun getTopRatedMovies(
     onLoadComplete: () -> Unit = {},
     onLoadFailed: (Throwable) -> Unit = {}
@@ -41,5 +44,29 @@ class MoviesViewModel @Inject constructor(
           onLoadFailed(it)
         }
       )
+  }
+  
+  fun getUpcomingMovies(
+    onLoadComplete: () -> Unit = {},
+    onLoadFailed: (Throwable) -> Unit = { it.printStackTrace()}
+  ){
+    compositeDisposable += repository
+      .getUpcoming()
+      .subscribeOn(ioScheduler)
+      .observeOn(mainThreadScheduler)
+      .subscribeBy(
+        onSuccess = {
+          upcomingMoviesList.value = it.results
+          onLoadComplete()
+        },
+        onError = {
+          onLoadFailed(it)
+        }
+      )
+  }
+  
+  override fun onCleared() {
+    super.onCleared()
+    compositeDisposable.clear()
   }
 }

@@ -9,4 +9,7 @@ import retrofit2.http.Query
 interface TMDBApi {
   @GET("movie/top_rated")
   fun getTopRated(@Query("api_key") apiKey: String): Single<MovieResponse>
+  
+  @GET("movie/upcoming")
+  fun getUpcoming(@Query("api_key") apiKey: String, @Query("region") region: String): Single<MovieResponse>
 }
